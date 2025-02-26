@@ -39,10 +39,21 @@ Outputs:
     nf: the calculated fatigue factor of safety
     N: the calculated finite life (N) if nf < 1.
 """
+import sys
 
 # =======================
 # Inputs
 # =======================
+print("This file is an input based one, type 'quit' if you ever want out immediately\n------ \n")
+
+def input_or_quit(prompt):
+    """
+    Gets user input and exits if the user types 'quit'
+    """
+    user_input = input(prompt).strip()
+    if user_input.lower() == "quit":
+        sys.exit("User requested exit. Quitting")
+    return user_input
 
 # Stress and material units: 'kpsi' or 'MPa'
 stress_unit = "kpsi"
