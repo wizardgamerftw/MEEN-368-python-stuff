@@ -1,3 +1,5 @@
 .venv/
 .idea/
 z_Hidden/
+
+# note you gotta put / after stuff to include everything in the folder
