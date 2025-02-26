@@ -136,7 +136,7 @@ def compute_a_notch(Sut, loading_type, stress_unit):
     return a_val
 
 
-def compute_Kf(Kt, p, a_notch, r):
+def compute_Kf(Kt, a_notch, r):
     """
     Calculate the fatigue stress concentration factor, Kf.
     Kf = 1 + (Kt - 1) / (1 +(a/r))
