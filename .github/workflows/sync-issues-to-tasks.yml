@@ -1,0 +1,31 @@
+name: Convert Tasks to Issues with Syncing
+
+on:
+  issues:
+    types: [opened, edited, closed]
+
+jobs:
+  sync-tasks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Fetch Open Issues and Update TASKS.md
+        run: |
+          echo "# Project Task List" > TASKS.md
+          echo "" >> TASKS.md
+          echo "## To Do" >> TASKS.md
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/issues?state=open" | \
+            jq -r '.[] | "- [ ] " + .title' >> TASKS.md
+          echo "" >> TASKS.md
+          echo "## Completed" >> TASKS.md
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/issues?state=closed" | \
+            jq -r '.[] | "- [x] " + .title' >> TASKS.md
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions@github.com'
+          git add TASKS.md
+          git commit -m "Sync TASKS.md with GitHub Issues" || exit 0
+          git push

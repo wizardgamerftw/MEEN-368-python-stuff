@@ -1,0 +1,25 @@
+name: Sync TASKS.md with GitHub Projects
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-to-projects:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Fetch Issues from TASKS.md and Add to GitHub Projects
+        run: |
+          ISSUES=$(cat TASKS.md | grep '- \[ \]' | sed 's/- \[ \] //')
+          for issue in $ISSUES
+          do
+            curl -X POST -H "Authorization: Bearer ${{ secrets.GH_PROJECTS_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues \
+            -d "{\"title\":\"$issue\", \"body\":\"Auto-added from TASKS.md\", \"labels\":[\"task\"]}"
+          done
