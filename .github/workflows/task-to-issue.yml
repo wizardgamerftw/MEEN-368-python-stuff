@@ -1,0 +1,21 @@
+name: Convert Tasks to Issues
+
+on:
+  push:
+    branches:
+      - main  # Runs when you the main branch gets updated (this is probably fine?)
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Convert TASKS.md into Issues
+        uses: peter-evans/create-issue-from-file@v4
+        with:
+          title: "New Task from TASKS.md"
+          content-filepath: TASKS.md
+          labels: "task"
+          assignees: "wizardgamerftw"
